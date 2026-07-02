@@ -170,16 +170,6 @@ def mainFunctionDebug
     showLoadingScreen
     MessageTypes.loadMessageFile("Data/messages.dat") if safeExists?("Data/messages.dat")
     PluginManager.runPlugins
-    begin
-      _reloaded_bootstrap = File.expand_path("./Reloaded/000_Bootstrap.rb")
-      if File.exist?(_reloaded_bootstrap)
-        load _reloaded_bootstrap
-        Reloaded::Bootstrap.boot if defined?(Reloaded::Bootstrap)
-      end
-    rescue Exception => e
-      puts "[Reloaded] Bootstrap error: #{e.class}: #{e}" rescue nil
-      puts e.backtrace.join("\n") rescue nil
-    end
     Compiler.main
     Game.initialize
     Game.set_up_system
@@ -192,6 +182,7 @@ def mainFunctionDebug
     rescue
       echo "failed to sort custom battlers"
     end
+    MessageConfig.pbResetSystemFontName
     $scene = pbCallTitle
     $scene.main until $scene.nil?
     Graphics.transition(20)
